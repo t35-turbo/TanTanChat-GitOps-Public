@@ -31,6 +31,10 @@ The application consists of the following service definitions:
 - kubectl configured to access your cluster
 
 ## Setup
+
+### 0. Fork the code branch for GitHub Actions and package builds
+This repository contains kubernetes manifests and configurations for deploying the application. You'll need to fork the other repository in order to be able to have CI.
+
 ### 1. Fork and Clone
 
 1. Fork this repository to your GitHub account
