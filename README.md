@@ -1,6 +1,6 @@
 # T3 Cloneathon GitOps Repository
 
-Ever wanted to have scalable and deploy TanTan chat on a kubernetes cluter with higher uptime than OpenRouter for some reason??? Deploy on Kubernetes!!!
+Ever wanted to have scalable and deploy TanTan chat on a kubernetes cluter with probably higher uptime than the actual models that the backend interacts with on OpenRouter for some reason??? Deploy on Kubernetes!!11!11!1!11!1!!!
 
 This repository contains Kubernetes manifests for deploying TanTan chat with using GitOps principles and ArgoCD.
 
