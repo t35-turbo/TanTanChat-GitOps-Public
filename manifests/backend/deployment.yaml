@@ -1,0 +1,175 @@
+# backend-deployment-corrected.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: t3-cloneathon
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+        # Your original labels for the selector
+        app.kubernetes.io/name: t3-cloneathon
+        app.kubernetes.io/version: "1.0.0"
+    spec:
+      imagePullSecrets:
+      - name: ghcr-io-secret
+      containers:
+      - name: backend
+        image: ghcr.io/YOUR_USERNAME/t3-cloneathon/backend:latest  # Replace with your backend image
+        ports:
+        - containerPort: 3001
+        # --- CORRECTED AND DE-DUPLICATED ENV SECTION ---
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: NODE_ENV
+        - name: LOCAL_FILE_STORE_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: LOCAL_FILE_STORE_PATH
+        - name: POSTGRES_HOST
+          value: "postgres-service"
+        - name: POSTGRES_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: POSTGRES_PORT
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: POSTGRES_PASSWORD
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_HOST      # MODIFIED: Now pulls from ConfigMap
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_PORT
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: REDIS_PASSWORD
+        - name: DATABASE_URL
+          value: "postgresql://postgres:$(POSTGRES_PASSWORD)@postgres-service:5432/cloneathon_db"
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: REDIS_URL       # MODIFIED: Now pulls from ConfigMap
+        - name: SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: SERVER_PORT
+        - name: PORT
+          value: "3001"
+        - name: BETTER_AUTH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: BETTER_AUTH_SECRET
+        - name: DISCORD_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: DISCORD_CLIENT_ID
+              optional: true
+        - name: DISCORD_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: DISCORD_CLIENT_SECRET
+              optional: true
+        - name: FRONTEND_URL
+          value: "https://your-domain.com"  # Replace with your domain
+        - name: BETTER_AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: BETTER_AUTH_URL
+        volumeMounts:
+        - name: uploads-volume
+          mountPath: "/file_store"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+          initialDelaySeconds: 5
+          timeoutSeconds: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "50m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: uploads-volume
+        persistentVolumeClaim:
+          claimName: backend-pvc
+---
+# You can include the other manifests in the same file for convenience
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: t3-cloneathon
+spec:
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 3001
+    targetPort: 3001
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: backend-pvc
+  namespace: t3-cloneathon
+spec:
+  storageClassName: local-storage
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 0.5Gi
+  selector:
+    matchLabels:
+      app: backend

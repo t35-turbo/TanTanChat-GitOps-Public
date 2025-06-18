@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service      # This is the name your backend will use to connect
+  namespace: t3-cloneathon
+spec:
+  selector:
+    app: redis            # This must match the labels on your Redis pods
+  ports:
+    - protocol: TCP
+      port: 6379          # The port the service will expose
+      targetPort: 6379    # The container port on the Redis pod

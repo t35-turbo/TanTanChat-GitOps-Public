@@ -1,0 +1,20 @@
+# configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: t3-cloneathon
+data:
+  POSTGRES_DB: "cloneathon_db"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PORT: "5432"
+  # Best practice is to define the host here as well
+  REDIS_HOST: "redis-service" 
+  REDIS_PORT: "6379"
+  # Add the REDIS_URL
+  REDIS_URL: "redis://redis-service:6379"
+  NODE_ENV: "production"
+  SERVER_PORT: "3001"
+  LOCAL_FILE_STORE_PATH: "/file_store"
+  REDIS_USER: "default"
+  BETTER_AUTH_URL: "https://your-domain.com"  # Replace with your domain
