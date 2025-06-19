@@ -10,6 +10,7 @@ There's a vibe coded untested setup.sh script in this repo that'll *probably* wo
 ![Machine Learning](https://imgs.xkcd.com/comics/machine_learning.png)
 
 *Image source: [xkcd: Machine Learning](https://xkcd.com/1838/)*
+\- from the frontend guy: akshually just make vershell do it
 
 
 ## Architecture
