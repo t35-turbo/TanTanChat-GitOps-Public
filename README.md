@@ -89,6 +89,8 @@ kubectl create secret docker-registry ghcr-io-secret \
 #### Replication
 You can adjust the number of replicas for the backend and frontend deployments in their respective manifest files
 
+Consider using Postgres and Redis operators and verify Redis setup for clustered deployments
+
 #### Persistient Volumes
 The example uses local storage for persistient volumes, under the assumption you have some sort of CEPH/glusterFS/DRBD/similar or NFS backed storage infrastructure. If you are deploying on a cloud provider and not bare metal (e.g. AWS), they likely have their own storage classes (e.g.) you can use. You should consult the provider's documentation.
 
