@@ -4,7 +4,7 @@ Ever wanted to have scalability and deploy TanTan chat on a kubernetes cluter wi
 
 This repository contains Kubernetes manifests for deploying TanTan chat with using GitOps principles and ArgoCD.
 
-### I want to deploy fast
+### "I want to deploy fast"
 There's a vibe coded untested setup.sh script in this repo that'll *probably* work
 
 ![Machine Learning](https://imgs.xkcd.com/comics/machine_learning.png)
