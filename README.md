@@ -61,7 +61,7 @@ Before deploying, you need to update the secret values:
 #### Application Secrets (`manifests/secret/secret.yaml`)
 Replace the placeholder values with base64-encoded secrets (or create them using `kubectl` on your cluster):
 
-NOTE: ECHO APPENDS A NEWLINE CHARACTER AT THE END, DON'T BE LIKE ME AND SPEND HOURS DEBUGGING :sob: - Pablonara
+NOTE: ECHO APPENDS A NEWLINE CHARACTER AT THE END BY DEFAULT, DON'T BE LIKE ME AND SPEND HOURS DEBUGGING :sob: - Pablonara
 
 ```bash
 # Generate base64 encoded values for your secrets
